@@ -128,113 +128,146 @@ class _MyHomePageState extends State<MyHomePage> {
 */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/Task.dart';
 
 void main() {
-  runApp(const RootWidget());
+  runApp(MaterialApp(
+    title: 'route',
+    home: FirstScreen(),
+  ));
+  //runApp(const SecondScreen());
+  //runApp(FirstScreen());
 }
 
-class RootWidget extends StatelessWidget {
-  const RootWidget({super.key});
-
+class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-            //centerTitle: true,
-            title: Row(children: [Text('Business Card')])
-
-        ),
-        backgroundColor: Colors.orangeAccent,
-        body: SafeArea(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                /*
-                Text('Hello World',
-                  style: TextStyle(fontSize: 35, color: Colors.blue)
-              ),
-                Text('Hello World',
-                    style: TextStyle(fontSize: 35, color: Colors.blue)
-                ),
-              Icon(Icons.face,size: 55,color: Colors.blue,),
-              */
-                /*
-                Container(
-                  width: 300,
-                  height: 30,
-
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(35)
-                  ),
-                  child: Center(
-                  child: Text('KING')
-                  )
-                  
-                 */
-                /*
-                SizedBox(
-                  width: double.infinity,
-                  height: 300,
-                  child: Image.asset('assets/images/Knight.jpg'),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 300,
-                  child: Image.network('https://media.istockphoto.com/id/173838005/photo/black-pawn.jpg?s=612x612&w=0&k=20&c=5C-60Q9jSyakRXItxs47mrCkKKECKTcPiIGSD7RYC5U='),
-                )
-
-                 */
-                CircleAvatar(
-                  backgroundColor: Colors.black,
-                  radius: 100,
-                  backgroundImage: AssetImage('assets/images/Ali.png'),
-                ),
-                SizedBox(height: 30,),
-                Text('Ali Elsadany',style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold)),
-                SizedBox(height: 0,),
-                Text('Android Developer',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
-                SizedBox(height: 20,),
-                Container(
-                  height: 30,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.phone),
-                      SizedBox(width: 20),
-                      Text('01147722385')
-                    ],
-                  ),
-                  ),
-                SizedBox(height: 10,),
-                Container(
-                  height: 30,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.mail),
-                      SizedBox(width: 20),
-                      Text('alieelsadany@gmail.com')
-                    ],
-                  ),
-                ),
-              ],
-              ),
-            )
-
-        ),
-      ),
+      home: MyApp(),
     );
   }
+
 }
+
+class MyApp extends StatefulWidget {
+  @override
+  content createState() => content();
+}
+
+  class content extends State<MyApp>{
+    final forEmail = TextEditingController();
+    final forPass = TextEditingController();
+    String erorr = '';
+
+    void login(){
+      String email = forEmail.text;
+      String password = forPass.text;
+      if(email == 'flutter@gmail.com' && password == 'upacademy') {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SecondScreen()));
+      }
+      else {
+        setState(() {
+          erorr = 'Invalid Email and Password';
+        });
+      }
+
+    }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    //bool emailValid = RegExp('flutter@gmail.com').hasMatch(value);
+            appBar: AppBar(
+              leading: Icon(Icons.table_rows),
+              centerTitle: true,
+              title: Text('Login'),
+              actions: [Icon(Icons.account_circle_sharp)],
+              backgroundColor: Colors.black,
+            ),
+            backgroundColor: Colors.grey[300],
+            body: SafeArea(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+
+                    Text('Please Enter the email and password',
+                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                    SizedBox(height: 20,),
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                        controller: forEmail,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.mail),
+                          hintText: 'Email',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),),
+
+                    //validator: (String){
+                        //bool emailValid = RegExp('ali').hasMatch(String!);
+                        //if(!emailValid){
+                         // return 'Enter Valid Email';
+                       // }
+                    //},
+
+                    ),
+
+
+                    SizedBox(height: 20,),
+                    TextFormField(
+                      keyboardType: TextInputType.visiblePassword,
+                        controller: forPass,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock),
+                          hintText: 'Password',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),),
+                     // validator: (value) {
+                       // bool emailValid = RegExp('ali').hasMatch(value!);
+                       // if (!emailValid) {
+                        //  return 'Enter Valid Email';
+                      //  }
+                    //  }
+                      ),
+                    SizedBox(height: 30,),
+
+
+                    ElevatedButton(
+                        onPressed: login,
+    // && forPass == 'u'
+    //forEmail == 'flutter@gmail.com'
+
+
+                           child: Text('Login')),
+                    Text(erorr,style: TextStyle(color: Colors.red),),
+                          ],
+                          ),
+
+                         // Navigator.push(context, MaterialPageRoute(
+                             // builder: (context) => SecondScreen()));
+
+
+                          //var checkPass = forPass.text;
+                          //Navigator.push(context, MaterialPageRoute(builder: (context) => SecondScreen() ));
+
+
+
+
+
+
+                ),
+              ),
+
+            );
+
+
+
+    }
+
+  }
+
+
+
+
+
