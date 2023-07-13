@@ -128,12 +128,14 @@ class _MyHomePageState extends State<MyHomePage> {
 */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/Task.dart';
+import 'package:flutter_test_project/BussinsCardScreen.dart';
+
+import 'Task.dart';
 
 void main() {
   runApp(MaterialApp(
     title: 'route',
-    home: FirstScreen(),
+    home: FirstScreenTask(),
   ));
   //runApp(const SecondScreen());
   //runApp(FirstScreen());
@@ -155,24 +157,32 @@ class MyApp extends StatefulWidget {
 }
 
   class content extends State<MyApp>{
+    final formKey = GlobalKey<FormState>();
     final forEmail = TextEditingController();
     final forPass = TextEditingController();
     String erorr = '';
+    bool isVis = true;
+    bool emailCorrect = false;
+
 
     void login(){
       String email = forEmail.text;
       String password = forPass.text;
       if(email == 'flutter@gmail.com' && password == 'upacademy') {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SecondScreen()));
+        //Navigator.push(
+            //context, MaterialPageRoute(builder: (context) => SecondScreen()));
       }
       else {
         setState(() {
-          erorr = 'Invalid Email and Password';
+          erorr = '* Invalid Email and Password *';
         });
       }
-
+      if(formKey.currentState!.validate()){
+        print('data valid');
+      }
     }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +198,7 @@ class MyApp extends StatefulWidget {
             backgroundColor: Colors.grey[300],
             body: SafeArea(
               child: Center(
+                key: formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,7 +213,21 @@ class MyApp extends StatefulWidget {
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.mail),
                           hintText: 'Email',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: emailCorrect == false ? Colors.red : Colors.green),borderRadius:BorderRadius.circular(20)
+                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+                        labelText: 'Email',
+                        ),
+                    validator: (value){
+                        if(!value!.contains('@gmail.com')){
+                          return 'Email not Valid';
+                        }
+                        return null;
+                    },
+
+
 
                     //validator: (String){
                         //bool emailValid = RegExp('ali').hasMatch(String!);
@@ -214,15 +239,33 @@ class MyApp extends StatefulWidget {
                     ),
 
 
+
                     SizedBox(height: 20,),
                     TextFormField(
                       keyboardType: TextInputType.visiblePassword,
                         controller: forPass,
-                        obscureText: true,
+                        obscureText: isVis,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock),
                           hintText: 'Password',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepOrange),
+                            borderRadius: BorderRadius.circular(20)),
+                          labelText: 'Password',
+                            //suffixIcon: Icon(Icons.visibility),
+                          suffixIcon: IconButton(
+                            onPressed: (){setState(() {
+                              isVis = !isVis;
+                              });
+                            },
+                            icon: isVis ? Icon(Icons.visibility_off) : Icon(Icons.visibility ),
+                          ),
+                        ),
+
+
+
+
                      // validator: (value) {
                        // bool emailValid = RegExp('ali').hasMatch(value!);
                        // if (!emailValid) {
@@ -234,12 +277,10 @@ class MyApp extends StatefulWidget {
 
 
                     ElevatedButton(
-                        onPressed: login,
-    // && forPass == 'u'
-    //forEmail == 'flutter@gmail.com'
-
-
+                        onPressed:
+                        login,
                            child: Text('Login')),
+                    SizedBox(height: 10,),
                     Text(erorr,style: TextStyle(color: Colors.red),),
                           ],
                           ),
